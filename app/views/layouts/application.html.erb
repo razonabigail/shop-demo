@@ -10,7 +10,10 @@
 <body>
 
 	<div id="main_content">
-				<form action="/checkout" method="get"><input type="hidden" name="affiliate_id" value="5789"><input type="hidden" name="creative_id" value="1443"><button>Click to apply IPSYPLOOS Promotion</button></form>
+				<form action="/checkout" method="get">
+					<input type="hidden" name="encoded_url" value=<%= request.original_url %>>
+					
+					<button>Click to apply IPSYPLOOS Promotion</button></form>
 
 		<%= yield %>		
 	</div>

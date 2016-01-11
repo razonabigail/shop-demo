@@ -11,7 +11,15 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160109152950) do
+ActiveRecord::Schema.define(version: 20160110204022) do
+
+  create_table "checkouts", force: :cascade do |t|
+    t.string   "encoded_url"
+    t.integer  "affiliate_id"
+    t.integer  "creatinve_id"
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
+  end
 
   create_table "homepages", force: :cascade do |t|
     t.string   "index"

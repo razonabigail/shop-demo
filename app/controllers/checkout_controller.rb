@@ -1,47 +1,45 @@
 class CheckoutController < ApplicationController
   def index
+  	
+  	# PRE-GENERATED UNIQUE LINK: http://strk.cakemarketing.com/?a=1&c=98&s1=
 
-  	#exec "curl http://strk.cakemarketing.com/?a=#{affiliate_id}&c=#{creative_id}&p=f&s1="
+  	#user_id = params[:user_id]
+	#puts "[DEBUG] user_id: #{user_id}"
 
-	api_key = 'wSzLLbZyVZm1O9ZKQkzeDmt4wTYTKeC'
+  	#affiliate_id = params[:affiliate_id]
+  	#puts "[DEBUG] affiliate_id: #{affiliate_id}"
 
-  	user_id = "ipsy-user-#{current_user.id}"
-	puts "[DEBUG] user_id: #{user_id}"
+  	#creative_id = params[:creative_id]
+  	#puts "[DEBUG] creative_id: #{creative_id}"
 
-  	affiliate_id = params[:affiliate_id]
-  	creative_id = params[:creative_id]
+  	@current_url = request.original_url
+  	#puts "[DEBUG] ORIGINAL URL: #{original_url}"
 
-
-# Generate Unique URL
-  	url = "http://strk.cakemarketing.com/?a=#{user_id}&c=#{creative_id}&p=f&s1="
-	puts "[DEBUG] Created UNIQUE URL: #{url}"
-
-	# encode the Unique URL to send as parameter to the redirect site
-	require 'cgi'
-	encoded_url = CGI.escape(url)
-	puts "[DEBUG] Encoded UNIQUE URL: #{encoded_url}"
-
-	# TODO sample url site
-	#url = "www.shop.com"
-	url = "http://localhost:3001"
-	url = "#{url}/unique_url=#{encoded_url}"
+  	encoded_url = params[:encoded_url]
+  	puts "[DEBUG] ORIGINAL URL: #{encoded_url}"
 
 
-	# TODO redirect to the shopping site
-
-  	redirect_to "#{url}"
-
-######## shopping site receives the unique URL
-
-	# get the parameter in unique_url
-	unique_url = encoded_url
+  	encoded_url = encoded_url.split("=",2)
+  	encoded_url = encoded_url[1]
 
 	# something to decode the URL
-	decoded_url = CGI.unescape(unique_url)
+	require 'cgi'
+	decoded_url = CGI.unescape(encoded_url)
 	puts "[DEBUG] Decoded UNIQUE URL: #{decoded_url}"
 
-	# dummy data
-	price = "12.99"
+
+	# sample shop url
+	url = "http://localhost:3001"					#dummy shop site
+	full_url = "#{url}/unique_url=#{encoded_url}"	#called by ipsyploos-demo
+
+
+
+	# parse full_url to get url
+
+
+
+	# dummy data of product bought from shop site
+	price = "100.00"
 	product = "Lipstick"
 	brand = "mac"
 	transaction_id = "asdf1234"
@@ -51,8 +49,9 @@ class CheckoutController < ApplicationController
 
 	# create Conversion link
 	t0 = Time.now
-	conversion_url = "#{decoded_url}&p=f&s1=#{price}&s2=#{product}&s3=#{brand}&s4=#{transaction_id}&s5=#{secret}"
-	puts "In Shopping Site"
+	cake_url = decoded_url
+	conversion_url = "#{cake_url}&s1=#{price}&s2=#{product}&s3=#{brand}&s4=#{transaction_id}&s5=#{secret}"
+	puts "Purchase Details"
 	puts "[DEBUG] price: #{price}"
 	puts "[DEBUG] product: #{product}"
 	puts "[DEBUG] brand: #{brand}"
@@ -61,14 +60,20 @@ class CheckoutController < ApplicationController
 	puts "[DEBUG] conversion_url: #{conversion_url}"
 
 	# sending the conversion link
-	xml = Nokogiri::XML(open(conversion_url))
+	require 'nokogiri'
+	#require 'open-uri'
+	require 'open_uri_redirections'
+	xml = Nokogiri::XML(open(conversion_url, :allow_redirections => :all))
+	
 	if xml.search('success').text == "false"
 		puts "ERROR: problem in sending conversion_url"
 		return
+	
 	end
-	puts xml
-	puts "after #{Time.now-t0} seconds"
-	#affiliate_id = xml.search('affiliate_id').text
-  	
+	
+	#puts "[DEBUG] #{xml}"
+	puts "[DEBUG] TIME LAPSED: #{Time.now-t0} seconds"
+	
+  	redirect_to "http://localhost:3000" # redirects back to ipsyploos dummy site
   end
 end
