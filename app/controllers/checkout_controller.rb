@@ -3,43 +3,30 @@ class CheckoutController < ApplicationController
   	
   	# PRE-GENERATED UNIQUE LINK: http://strk.cakemarketing.com/?a=1&c=98&s1=
 
-  	#user_id = params[:user_id]
-	#puts "[DEBUG] user_id: #{user_id}"
-
-  	#affiliate_id = params[:affiliate_id]
-  	#puts "[DEBUG] affiliate_id: #{affiliate_id}"
-
-  	#creative_id = params[:creative_id]
-  	#puts "[DEBUG] creative_id: #{creative_id}"
-
   	@current_url = request.original_url
   	#puts "[DEBUG] ORIGINAL URL: #{original_url}"
 
-  	encoded_url = params[:encoded_url]
-  	puts "[DEBUG] ORIGINAL URL: #{encoded_url}"
+  	original_link = params[:original_link]
+  	puts "[DEBUG] ORIGINAL URL: #{original_link}"
 
 
-  	encoded_url = encoded_url.split("=",2)
+  	encoded_url = original_link.split("=",2)
   	encoded_url = encoded_url[1]
 
 	# something to decode the URL
 	require 'cgi'
-	decoded_url = CGI.unescape(encoded_url)
-	puts "[DEBUG] Decoded UNIQUE URL: #{decoded_url}"
+	cake_url = CGI.unescape(encoded_url)
+	puts "[DEBUG] DECODED UNIQUE CAKE URL FROM IPSYPLOOS-DEMO: #{cake_url}"
 
 
 	# sample shop url
-	url = "http://localhost:3001"					#dummy shop site
-	full_url = "#{url}/unique_url=#{encoded_url}"	#called by ipsyploos-demo
-
-
-
-	# parse full_url to get url
+	shop_url = "http://localhost:3001"					#dummy shop site
+	full_shop_url = "#{shop_url}/unique_url=#{encoded_url}"	#called by ipsyploos-demo
 
 
 
 	# dummy data of product bought from shop site
-	price = "100.00"
+	price = "123.00"
 	product = "Lipstick"
 	brand = "mac"
 	transaction_id = "asdf1234"
@@ -49,7 +36,6 @@ class CheckoutController < ApplicationController
 
 	# create Conversion link
 	t0 = Time.now
-	cake_url = decoded_url
 	conversion_url = "#{cake_url}&s1=#{price}&s2=#{product}&s3=#{brand}&s4=#{transaction_id}&s5=#{secret}"
 	puts "Purchase Details"
 	puts "[DEBUG] price: #{price}"
