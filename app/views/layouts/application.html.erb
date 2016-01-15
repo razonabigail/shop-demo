@@ -11,10 +11,16 @@
 
 	<div id="main_content">
 				<form action="/checkout" method="get">
-					<input type="hidden" name="original_link" value=<%= request.original_url %>>
-					
-					<button>Click to apply IPSYPLOOS Promotion</button></form>
+					<!--
+						<input type="hidden" name="original_link" value=<%= request.original_url %>>
+					-->
+					<input type="hidden" name="trans" value=<%= params[:trans] %>>
+					<input type="hidden" name="user" value=<%= params[:user] %>>
 
+					Product Name: <%= text_field_tag 'product', 'lipstick' %> <br/>
+					Amount: <%= text_field_tag 'amount', '100' %> <br/>
+
+					<button>Click to Checkout and Apply IPSYPLOOS Promotion</button></form>
 		<%= yield %>		
 	</div>
 
