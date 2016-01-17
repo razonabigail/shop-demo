@@ -1,2 +1,25 @@
 <h1>Checkout#index</h1>
 <p>Find me in app/views/checkout/index.html.erb</p>
+
+
+<iframe id="ipsypb" src="" scrolling="no" frameborder="0" width="1" height="1"></iframe>
+<script>
+	// parses the URL
+	var QueryString = function () { var query_string = {}; var query = window.location.search.substring(1); var vars = query.split("&"); for (var i=0;i<vars.length;i++) { var pair = vars[i].split("="); if (typeof query_string[pair[0]] === "undefined") { query_string[pair[0]] = decodeURIComponent(pair[1]); } else if (typeof query_string[pair[0]] === "string") { var arr = [ query_string[pair[0]],decodeURIComponent(pair[1]) ]; query_string[pair[0]] = arr; } else { query_string[pair[0]].push(decodeURIComponent(pair[1])); } } return query_string; }();
+
+	// get Cookie
+	function getCookie(cname) { var name = cname + "="; var ca = document.cookie.split(';'); for(var i=0; i<ca.length; i++) { var c = ca[i]; while (c.charAt(0)==' ') c = c.substring(1); if (c.indexOf(name) == 0) return c.substring(name.length,c.length); } return ""; }
+
+	// if there's no transaction id, then we enable the iframe pixel conversion
+	if(QueryString.trans == ""){
+		// decode the postback url
+		var ipsypburl = decodeURIComponent(getCookie("postbackurl"));
+		function replace(old_var, new_var){
+		    ipsypburl = ipsypburl.replace(old_var, new_var);
+		}
+		replace("AMOUNT",QueryString.amount);
+		replace("PRODUCT",QueryString.product);
+		// set the src of iframe to fire conversion
+		document.getElementById('ipsypb').src = ipsypburl ;
+	}
+</script>
